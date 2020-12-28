@@ -6,7 +6,7 @@ var mouse = {
 };
 
 
-
+var username;
 var canvas = document.getElementById('drawing');
 var context = canvas.getContext('2d');
 var width = window.innerWidth;
@@ -50,9 +50,35 @@ socket.on('clear_canvas', function(data) {
     context.clearRect(0, 0, canvas.width, canvas.height);
 });
 
+socket.on('set_username', function(data) {
+    username = data;
+    console.log("username set ", username);
+})
+
+socket.on('show_position', function(data) {
+    // data will be an array of json objects
+    for (elts in data) {
+        var cursor_x = elts.x;
+        var cursor_y = elts.y;
+        var username = elts.username;
+        context.lineWidth = 2;
+        context.strokeStyle = 'black';
+        context.beginPath();
+        context.moveTo(cursor_x * width, cursor_y * height);
+        context.lineTo(cursor_x * width, cursor_y * height);
+        context.stroke();
+    }
+});
+
+
+socket.on('give_position', function() {
+    socket.emit({ username: username, x: mouse.pos.x, y: mouse.pos.y });
+});
+
 function mainLoop() {
     if (mouse.click && mouse.move && mouse.pos_prev) {
         var lineWidth = document.getElementById('strokeWidth').value;
+        var strokeColor = document.getElementById('brushColor').value;
         socket.emit('draw_line', { line: { start: mouse.pos, end: mouse.pos_prev, color: strokeColor, lineWidth: lineWidth } });
         mouse.move = false;
     }

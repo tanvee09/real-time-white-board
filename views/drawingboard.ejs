@@ -10,11 +10,13 @@
 <body>
     <canvas id="drawing"></canvas>
     <button onclick="clearCanvas()">Clear</button>
-    <button onclick="changeStrokeColor('black')" style="background-color: black;"></button>
+    <label for="brushColor">Select your favorite color:</label>
+    <input type="color" id="brushColor" name="brushColor" value="#ff0000">
+    <!--button onclick="changeStrokeColor('black')" style="background-color: black;"></button>
     <button onclick="changeStrokeColor('red')" style="background-color: red;"></button>
     <button onclick="changeStrokeColor('green')" style="background-color: green;"></button>
     <button onclick="changeStrokeColor('yellow')" style="background-color: yellow;"></button>
-    <button onclick="changeStrokeColor('blue')" style="background-color: blue;"></button>
+    <button onclick="changeStrokeColor('blue')" style="background-color: blue;"></button-->
     <label for="strokeWidth">Stroke Width</label>
     <input type="range" id="strokeWidth" name="strokeWidth" min="1" max="20">
     <script src="socket.io/socket.io.js"></script>

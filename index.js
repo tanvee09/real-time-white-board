@@ -14,25 +14,29 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static("static"));
 
+var userid = 0;
 
 var line_history = [];
 
 io.on('connection', function(socket) {
     console.log('connected');
     for (var i in line_history) {
-        socket.emit('draw_line', {line: line_history[i]});
+        socket.emit('draw_line', { line: line_history[i] });
     }
 
     socket.on('draw_line', function(data) {
-        console.log(data.line);
+        //console.log(data.line);
         line_history.push(data.line);
-        io.emit('draw_line', {line: data.line});
+        io.emit('draw_line', { line: data.line });
     });
 
     socket.on('clear_canvas', function(data) {
         line_history = [];
         io.emit('clear_canvas', {});
     });
+
+    socket.emit('set_username', userid);
+    userid += 1;
 })
 
 
