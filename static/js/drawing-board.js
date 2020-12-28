@@ -37,13 +37,22 @@ canvas.onmousemove = function(e) {
 
 socket.on('draw_line', function(data) {
     var line = data.line;
-    context.lineWidth = 2;
-    context.strokeStyle = data.line.color;
     context.beginPath();
-    context.moveTo(line.start.x * width, line.start.y * height);
-    context.lineTo(line.end.x * width, line.end.y * height);
-    context.stroke();
-    context.strokeStyle = strokeColor;
+    context.lineWidth = 2;
+    if (data.line.erase) {
+        context.strokeStyle = line.color;
+        context.globalCompositeOperation = "source-over";
+        context.moveTo(line.start.x * width, line.start.y * height);
+        context.lineTo(line.end.x * width, line.end.y * height);
+        context.stroke();
+        context.strokeStyle = strokeColor;
+    } else {
+        context.globalCompositeOperation = "destination-out";
+        context.arc(line.start.x, line.start.y, 8, 0, Math.PI*2, false);
+        context.fill();
+    }
+    
+    
 });
 
 socket.on('clear_canvas', function(data) {
