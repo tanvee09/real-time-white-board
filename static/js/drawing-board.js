@@ -5,6 +5,7 @@ var mouse = {
     pos_prev: false
 };
 
+var eraserOn = false;
 
 
 var canvas = document.getElementById('drawing');
@@ -37,27 +38,18 @@ canvas.onmousemove = function(e) {
 
 socket.on('draw_line', function(data) {
     var line = data.line;
-<<<<<<< HEAD
-=======
     context.lineWidth = line.lineWidth;
     context.strokeStyle = line.color;
->>>>>>> b3251c0e5b0817c57febe0dc05b83d5f13a2dd3d
-    context.beginPath();
-    context.lineWidth = 2;
-    if (data.line.erase) {
-        context.strokeStyle = line.color;
+    if (!data.line.erase) {
         context.globalCompositeOperation = "source-over";
-        context.moveTo(line.start.x * width, line.start.y * height);
-        context.lineTo(line.end.x * width, line.end.y * height);
-        context.stroke();
-        context.strokeStyle = strokeColor;
     } else {
         context.globalCompositeOperation = "destination-out";
-        context.arc(line.start.x, line.start.y, 8, 0, Math.PI*2, false);
-        context.fill();
     }
-    
-    
+    context.beginPath();
+    context.moveTo(line.start.x * width, line.start.y * height);
+    context.lineTo(line.end.x * width, line.end.y * height);
+    context.stroke();
+    context.strokeStyle = strokeColor;
 });
 
 socket.on('clear_canvas', function(data) {
@@ -67,7 +59,7 @@ socket.on('clear_canvas', function(data) {
 function mainLoop() {
     if (mouse.click && mouse.move && mouse.pos_prev) {
         var lineWidth = document.getElementById('strokeWidth').value;
-        socket.emit('draw_line', { line: { start: mouse.pos, end: mouse.pos_prev, color: strokeColor, lineWidth: lineWidth } });
+        socket.emit('draw_line', { line: { start: mouse.pos, end: mouse.pos_prev, color: strokeColor, lineWidth: lineWidth, erase: eraserOn } });
         mouse.move = false;
     }
     mouse.pos_prev = { x: mouse.pos.x, y: mouse.pos.y };
@@ -83,4 +75,15 @@ function clearCanvas() {
 function changeStrokeColor(color) {
     strokeColor = color;
     context.strokeStyle = color;
+}
+
+function toggleEraser() {
+    eraserOn = !eraserOn;
+    if (eraserOn) {
+        document.getElementById('eraser').style.backgroundColor = 'green';
+        document.getElementById('drawing').style['cursor'] = 'url("/images/eraser.png"), auto';
+    } else {
+        document.getElementById('eraser').style.backgroundColor = '';
+        document.getElementById('drawing').style['cursor'] = 'url("/images/cursor.png"), auto';
+    }
 }
