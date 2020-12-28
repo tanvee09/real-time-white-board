@@ -15,19 +15,7 @@ var height = window.innerHeight * 0.9;
 canvas.width = width;
 canvas.height = height;
 
-strokeColor = 'black';
-
-// try {
-//     context.beginPath();
-//     context.lineWidth = '2';
-//     context.strokeStyle = "green";
-//     context.moveTo(1, 2);
-//     context.lineTo(250, 250);
-//     context.stroke();
-// } catch(err) {
-//     alert(err);
-// }
-
+var strokeColor = 'red';
 var socket = io.connect();
 
 
@@ -50,13 +38,12 @@ canvas.onmousemove = function(e) {
 socket.on('draw_line', function(data) {
     var line = data.line;
     context.lineWidth = 2;
-    context.strokeColor = data.line.color;
+    context.strokeStyle = data.line.color;
     context.beginPath();
     context.moveTo(line.start.x * width, line.start.y * height);
     context.lineTo(line.end.x * width, line.end.y * height);
     context.stroke();
-    context.strokeColor = strokeColor;
-
+    context.strokeStyle = strokeColor;
 });
 
 socket.on('clear_canvas', function(data) {
@@ -78,13 +65,7 @@ function clearCanvas() {
     socket.emit('clear_canvas', {});  
 }
 
-function blackStroke() {
-    strokeColor = 'black';
-    context.strokeColor = 'black';
-}
-
-function redStroke() {
-    strokeColor = 'red';
-    context.strokeColor = 'red';
-    alert('color red');
+function changeStrokeColor(color) {
+    strokeColor = color;
+    context.strokeStyle = color;
 }
