@@ -6,8 +6,7 @@ const bodyParser = require('body-parser');
 const drawingboard = require('./routes/drawingboard');
 
 var server = http.createServer(app);
-var io = socketio(server);
-
+var io = socketio(server); {}
 app.set("view engine", "ejs");
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -15,6 +14,8 @@ app.use(bodyParser.json());
 app.use(express.static("static"));
 
 var userid = 0;
+
+var userInfo = {} // consists of username,{x,y}
 
 var line_history = [];
 
@@ -33,6 +34,11 @@ io.on('connection', function(socket) {
     socket.on('clear_canvas', function(data) {
         line_history = [];
         io.emit('clear_canvas', {});
+    });
+
+
+    socket.on('draw_cursor', function(data) {
+        io.emit('draw_cursor', { line: data.line, id: socket.id });
     });
 
     socket.emit('set_username', userid);

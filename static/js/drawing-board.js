@@ -33,6 +33,7 @@ canvas.onmousemove = function(e) {
     mouse.pos.x = e.clientX / width;
     mouse.pos.y = e.clientY / height;
     mouse.move = true;
+    socket.emit('draw_cursor', { line: { x: mouse.pos.x, y: mouse.pos.y } });
     // alert(`${mouse.pos.x}, ${mouse.pos.y}`);
 }
 
@@ -61,25 +62,6 @@ socket.on('set_username', function(data) {
     console.log("username set ", username);
 })
 
-socket.on('show_position', function(data) {
-    // data will be an array of json objects
-    for (elts in data) {
-        var cursor_x = elts.x;
-        var cursor_y = elts.y;
-        var username = elts.username;
-        context.lineWidth = 2;
-        context.strokeStyle = 'black';
-        context.beginPath();
-        context.moveTo(cursor_x * width, cursor_y * height);
-        context.lineTo(cursor_x * width, cursor_y * height);
-        context.stroke();
-    }
-});
-
-
-socket.on('give_position', function() {
-    socket.emit({ username: username, x: mouse.pos.x, y: mouse.pos.y });
-});
 
 function mainLoop() {
     if (mouse.click && mouse.move && mouse.pos_prev) {
@@ -113,3 +95,26 @@ function toggleEraser() {
         document.getElementById('drawing').style['cursor'] = 'url("/images/cursor.png"), auto';
     }
 }
+
+
+
+function getCursorElement(id) {
+    var elementId = 'cursor-' + id;
+    var element = document.getElementById(elementId);
+    if (element == null) {
+        element = document.createElement('div');
+        element.id = elementId;
+        element.className = 'cursor';
+        document.body.appendChild(element);
+    }
+    return element;
+}
+
+
+socket.on('draw_cursor', function(data) {
+    var el = getCursorElement(data.id);
+    console.log(data.line);
+    el.style.left = data.line.x * width + 'px';
+    el.style.top = data.line.y * width + 'px';
+    el.style.position = "absolute";
+});

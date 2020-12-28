@@ -5,6 +5,8 @@
     <title>White Board</title>
     <link rel="stylesheet" href="/css/drawing-board.css">
     <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <link href="/pointer/pointer.css" rel="stylesheet">
+    <script src="/pointer/pointer.js"></script>
 </head>
 
 <body>
@@ -12,11 +14,6 @@
     <button onclick="clearCanvas()">Clear</button>
     <label for="brushColor">Select your favorite color:</label>
     <input type="color" id="brushColor" name="brushColor" value="#ff0000">
-    <!--button onclick="changeStrokeColor('black')" style="background-color: black;"></button>
-    <button onclick="changeStrokeColor('red')" style="background-color: red;"></button>
-    <button onclick="changeStrokeColor('green')" style="background-color: green;"></button>
-    <button onclick="changeStrokeColor('yellow')" style="background-color: yellow;"></button>
-    <button onclick="changeStrokeColor('blue')" style="background-color: blue;"></button-->
     <button onclick="toggleEraser()" id="eraser"><i class="fas fa-eraser"></i></button>
 
     <label for="strokeWidth">Stroke Width</label>
