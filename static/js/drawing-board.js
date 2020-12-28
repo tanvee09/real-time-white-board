@@ -1,7 +1,7 @@
 var mouse = {
     click: false,
     move: false,
-    pos: {x: 0, y: 0},
+    pos: { x: 0, y: 0 },
     pos_prev: false
 };
 
@@ -37,6 +37,11 @@ canvas.onmousemove = function(e) {
 
 socket.on('draw_line', function(data) {
     var line = data.line;
+<<<<<<< HEAD
+=======
+    context.lineWidth = line.lineWidth;
+    context.strokeStyle = line.color;
+>>>>>>> b3251c0e5b0817c57febe0dc05b83d5f13a2dd3d
     context.beginPath();
     context.lineWidth = 2;
     if (data.line.erase) {
@@ -61,17 +66,18 @@ socket.on('clear_canvas', function(data) {
 
 function mainLoop() {
     if (mouse.click && mouse.move && mouse.pos_prev) {
-        socket.emit('draw_line', {line: {start: mouse.pos, end: mouse.pos_prev, color: strokeColor}});
+        var lineWidth = document.getElementById('strokeWidth').value;
+        socket.emit('draw_line', { line: { start: mouse.pos, end: mouse.pos_prev, color: strokeColor, lineWidth: lineWidth } });
         mouse.move = false;
     }
-    mouse.pos_prev = {x: mouse.pos.x, y: mouse.pos.y};
+    mouse.pos_prev = { x: mouse.pos.x, y: mouse.pos.y };
 }
 
 setInterval(mainLoop, 25);
 
 
 function clearCanvas() {
-    socket.emit('clear_canvas', {});  
+    socket.emit('clear_canvas', {});
 }
 
 function changeStrokeColor(color) {
