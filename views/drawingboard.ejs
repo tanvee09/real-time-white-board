@@ -4,7 +4,7 @@
 <head>
     <title>White Board</title>
     <link rel="stylesheet" href="/css/drawing-board.css">
-
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
 </head>
 
 <body>
@@ -17,6 +17,8 @@
     <button onclick="changeStrokeColor('green')" style="background-color: green;"></button>
     <button onclick="changeStrokeColor('yellow')" style="background-color: yellow;"></button>
     <button onclick="changeStrokeColor('blue')" style="background-color: blue;"></button-->
+    <button onclick="toggleEraser()" id="eraser"><i class="fas fa-eraser"></i></button>
+
     <label for="strokeWidth">Stroke Width</label>
     <input type="range" id="strokeWidth" name="strokeWidth" min="1" max="20">
     <script src="socket.io/socket.io.js"></script>

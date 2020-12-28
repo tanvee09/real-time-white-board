@@ -5,6 +5,7 @@ var mouse = {
     pos_prev: false
 };
 
+var eraserOn = false;
 
 var username;
 var canvas = document.getElementById('drawing');
@@ -39,6 +40,11 @@ socket.on('draw_line', function(data) {
     var line = data.line;
     context.lineWidth = line.lineWidth;
     context.strokeStyle = line.color;
+    if (!data.line.erase) {
+        context.globalCompositeOperation = "source-over";
+    } else {
+        context.globalCompositeOperation = "destination-out";
+    }
     context.beginPath();
     context.moveTo(line.start.x * width, line.start.y * height);
     context.lineTo(line.end.x * width, line.end.y * height);
@@ -79,7 +85,7 @@ function mainLoop() {
     if (mouse.click && mouse.move && mouse.pos_prev) {
         var lineWidth = document.getElementById('strokeWidth').value;
         var strokeColor = document.getElementById('brushColor').value;
-        socket.emit('draw_line', { line: { start: mouse.pos, end: mouse.pos_prev, color: strokeColor, lineWidth: lineWidth } });
+        socket.emit('draw_line', { line: { start: mouse.pos, end: mouse.pos_prev, color: strokeColor, lineWidth: lineWidth, erase: eraserOn } });
         mouse.move = false;
     }
     mouse.pos_prev = { x: mouse.pos.x, y: mouse.pos.y };
@@ -95,4 +101,15 @@ function clearCanvas() {
 function changeStrokeColor(color) {
     strokeColor = color;
     context.strokeStyle = color;
+}
+
+function toggleEraser() {
+    eraserOn = !eraserOn;
+    if (eraserOn) {
+        document.getElementById('eraser').style.backgroundColor = 'green';
+        document.getElementById('drawing').style['cursor'] = 'url("/images/eraser.png"), auto';
+    } else {
+        document.getElementById('eraser').style.backgroundColor = '';
+        document.getElementById('drawing').style['cursor'] = 'url("/images/cursor.png"), auto';
+    }
 }
