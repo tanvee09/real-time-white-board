@@ -10,8 +10,8 @@ var eraserOn = false;
 var username;
 var canvas = document.getElementById('drawing');
 var context = canvas.getContext('2d');
-var width = window.innerWidth;
-var height = window.innerHeight * 0.9;
+var width = window.innerWidth * 0.5;
+var height = window.innerHeight * 0.5;
 
 canvas.width = width;
 canvas.height = height;
@@ -102,10 +102,10 @@ function getCursorElement(id) {
     var elementId = 'cursor-' + id;
     var element = document.getElementById(elementId);
     if (element == null) {
-        element = document.createElement('div');
+        element = document.createElement('span');
         element.id = elementId;
         element.className = 'cursor';
-        document.body.appendChild(element);
+        document.getElementById('canvasDiv').appendChild(element);
     }
     return element;
 }
@@ -113,8 +113,13 @@ function getCursorElement(id) {
 
 socket.on('draw_cursor', function(data) {
     var el = getCursorElement(data.id);
+    var color = data.color;
+    console.log(color);
     console.log(data.line);
     el.style.left = data.line.x * width + 'px';
-    el.style.top = data.line.y * width + 'px';
+    // el.style.left = (width) + 'px';
+    // el.style.top = (height) + 'px';
+    el.style.top = data.line.y * height + 'px';
+    el.style.borderColor = color;
     el.style.position = "absolute";
 });
