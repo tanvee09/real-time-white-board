@@ -1,3 +1,5 @@
+
+
 var mouse = {
     click: false,
     move: false,
@@ -19,7 +21,10 @@ canvas.height = height;
 var strokeColor = 'red';
 var socket = io.connect();
 
+var roomId = document.getElementById('room_id').innerHTML;
+alert(`..${roomId}..`);
 
+socket.emit('joinRoom', roomId);
 
 canvas.onmousedown = function(e) {
     mouse.click = true;

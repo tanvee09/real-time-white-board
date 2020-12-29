@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>White Board</title>
+    <link rel="stylesheet" href="/css/drawing-board.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+</head>
+
+<body>
+    <button onclick="createRoom()">Create Room</button>
+    <p id="roomid"></p>
+    <input type="text" maxlength="6" id="roomnameInp">
+    <button onclick="joinRoom()">Join Room</button>
+    <script src="socket.io/socket.io.js"></script>
+    <script src="/js/drawing-join.js"></script>
+</body>
+
+</html>

@@ -89,32 +89,10 @@ io.on('connection', (socket) => {
     socket.on('draw_cursor', function(data) {
         let room_id = socket.roomId;
         for (sock of rooms[room_id].sockets) {
-            sock.emit('draw_cursor', { line: data.line, id: sock.id, color: sock.color });
+            sock.emit('draw_cursor', { line: data.line, id: sock.id, color: socket.color });
         }
     });
 
-
-    socket.on('setUsername', (text) => {
-        socket.name = text;
-        socket.emit('getUsername', socket.name);
-    });
-
-
-
-
-
-    /**
-     * Lets us know that players have joined a room and are waiting in the waiting room.
-     */
-
-
-    socket.on('deletePrevSockets', (roomId) => {
-        console.log("Delete sockets in: " + roomId);
-        for (i in rooms)
-            console.log(rooms[i].id);
-        rooms[roomId].sockets = [];
-        rooms[roomId].user_id = [];
-    });
 
 
     //Gets fired when someone wants to get the list of rooms. respond with the list of room names.
@@ -149,45 +127,54 @@ io.on('connection', (socket) => {
         return room;
     }
 
+    socket.on('checkRoomId', (roomid) => {
+        if (roomid in rooms) {
+            socket.emit('validRoomId', roomid);
+            console.log('valid');
+        } else {
+            socket.emit('invalidRoomId');
+            console.log('invalid');
+        }
+    });
+
     //Gets fired when a user wants to create a new room.
-    socket.on('createRoom', (roomName) => {
+    socket.on('createRoom', () => {
         let id = uniqueRoomID();
-        // const room = {
-        //     id: uniqueRoomID(), // generate a unique id for the new room, that way we don't need to deal with duplicates.
-        //     name: roomName,
-        //     sockets: [],
-        //     line_history: [], // this i changed
-        //     user_id: [] // user ids of all the sockets connected;
-        // };
-        // rooms[room.id] = room;
-        // have the socket join the room they've just created.
-        // joinRoom(socket, room);
-        // for (i in rooms)
-        //     console.log(rooms[i].id);
-        socket.emit('roomId', room.id);
+        socket.emit('roomId', id);
     });
 
     //Gets fired when a player has joined a room.
-    socket.on('joinRoom', (roomId, callback) => {
-        console.log("Available room ids: ")
-        for (i in rooms) {
-            console.log(i.length);
-        }
-        console.log('Trying to connect to: #' + roomId.length + "#");
-        const room = rooms[roomId];
-        joinRoom(socket, room);
-        for (var i in room[line_history]) { // do something
-            socket.emit('draw_line', { line: line_history[i] });
+    socket.on('joinRoom', (roomId) => {
+        console.log('Trying to connect to: #' + roomId + "#");
+        socket.roomId = roomId;
+        socket.name = "";
+        if (roomId in rooms) {
+            let room = rooms[roomId];
+            // console.log(room.line_history);
+            joinRoom(socket, room);
+            for (var i of room.line_history) { // do something
+                socket.emit('draw_line', { line: i });
+            }
+        } else {
+            const room = {
+                id: roomId,
+                sockets: [],
+                line_history: [], // this i changed
+                user_id: [] // user ids of all the sockets connected;
+            };
+            rooms[room.id] = room;
+            joinRoom(socket, room);
         }
     });
 
     socket.on('disconnect', () => {
         leaveRooms(socket);
+        console.log("rooms left ", Object.keys(rooms).length);
     });
 
-    socket.on('leaveRoom', () => {
-        leaveRooms(socket);
-    });
+    // socket.on('leaveRoom', () => {
+    //     leaveRooms(socket);
+    // });
 });
 
 
@@ -200,10 +187,13 @@ app.get("/multiplayer:roomid", async(req, res) => {
 
 app.get('/draw/:id', (req, res) => {
     let id = req.params.id;
+    // console.log('pinged', id);
     res.render('drawingboard', { roomId: id });
 });
 
-
+app.get('/drawingboard', (req, res) => {
+    res.render('drawingjoin');
+});
 
 // app.use('/drawingboard', drawingboard);
 
