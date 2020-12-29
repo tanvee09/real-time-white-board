@@ -10,16 +10,24 @@
 </head>
 
 <body>
-    <canvas id="drawing"></canvas>
-    <button onclick="clearCanvas()">Clear</button>
-    <label for="brushColor">Select your favorite color:</label>
-    <input type="color" id="brushColor" name="brushColor" value="#ff0000">
-    <button onclick="toggleEraser()" id="eraser"><i class="fas fa-eraser"></i></button>
+    <% if(locals.roomId){ %>
+        <p id="room_id">
+            <%= roomId %>
+        </p>
+        <% } %>
 
-    <label for="strokeWidth">Stroke Width</label>
-    <input type="range" id="strokeWidth" name="strokeWidth" min="1" max="20">
-    <script src="socket.io/socket.io.js"></script>
-    <script src="/js/drawing-board.js"></script>
+            <div id="canvasDiv">
+                <canvas id="drawing"></canvas>
+            </div>
+            <button onclick="clearCanvas()">Clear</button>
+            <label for="brushColor">Select your favorite color:</label>
+            <input type="color" id="brushColor" name="brushColor" value="#ff0000">
+            <button onclick="toggleEraser()" id="eraser"><i class="fas fa-eraser"></i></button>
+
+            <label for="strokeWidth">Stroke Width</label>
+            <input type="range" id="strokeWidth" name="strokeWidth" min="1" max="20">
+            <script src="socket.io/socket.io.js"></script>
+            <script src="/js/drawing-board.js"></script>
 </body>
 
 </html>
