@@ -10,11 +10,21 @@
 </head>
 
 <body>
+<<<<<<< HEAD
     <% if(locals.roomId){ %>
         <p id="room_id">
             <%= roomId %>
         </p>
         <% } %>
+=======
+    <div id="canvasDiv">
+        <canvas id="drawing"></canvas>
+    </div>
+    <button onclick="clearCanvas()">Clear</button>
+    <label for="brushColor">Select your favorite color:</label>
+    <input type="color" id="brushColor" name="brushColor" value="#ff0000">
+    <button onclick="toggleEraser()" id="eraser"><i class="fas fa-eraser"></i></button>
+>>>>>>> 7a9bd209b12c602d61f869b0664d182055968c6f
 
             <div id="canvasDiv">
                 <canvas id="drawing"></canvas>

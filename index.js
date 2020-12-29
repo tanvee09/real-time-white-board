@@ -7,7 +7,7 @@ const drawingboard = require('./routes/drawingboard');
 const { v1: uuid } = require('uuid');
 
 var server = http.createServer(app);
-var io = socketio(server); {}
+var io = socketio(server);
 app.set("view engine", "ejs");
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -18,11 +18,6 @@ app.use(express.static("static"));
 const rooms = {} // can keep track of all the rooms , there players, there ids,
 var colors = ['red', 'yellow', 'red', 'pink', 'green', 'orange', 'blue'];
 
-/**
- * Will connect a socket to a specified room
- * @param socket A connected socket.io socket
- * @param room An object that represents a room from the `rooms` instance variable object
- */
 
 const joinRoom = (socket, room) => {
     room.sockets.push(socket);
@@ -68,6 +63,8 @@ io.on('connection', (socket) => {
 
     console.log('a user connected');
     socket.emit('message', 'You are connected!');
+
+    socket.color = colors[Math.floor(Math.random() * colors.length)];
 
     socket.on('draw_line', function(data) {
 
